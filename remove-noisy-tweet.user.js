@@ -152,6 +152,23 @@
             });
             this.element.appendChild(addButton);
 
+            const importButton = document.createElement('button');
+            importButton.innerHTML = `Import`;
+            importButton.addEventListener('click', () => {
+                const ret = prompt('Import', '');
+                if (ret != null && ret != '') {
+                    this.load(ret);
+                }
+            });
+            this.element.appendChild(importButton);
+
+            const exportButton = document.createElement('button');
+            exportButton.innerHTML = `Export`;
+            exportButton.addEventListener('click', () => {
+                prompt('Export', this.stringify());
+            });
+            this.element.appendChild(exportButton);
+
             const saveButton = document.createElement('button');
             saveButton.innerHTML = `Save on close`;
             saveButton.addEventListener('click', () => {
@@ -167,10 +184,8 @@
             });
             this.element.appendChild(closeButton);
 
-            this.hide();
             document.body.appendChild(this.element);
-
-            this.load();
+            this.hide();
         }
 
         addItemElement(text) {
@@ -190,18 +205,24 @@
             this.itemsAreaElement.insertBefore(div, this.itemsAreaElement.firstElementChild);
         }
 
-        load() {
-            const data = localStorage.getItem(this.saveKey);
+        stringify() {
+            return JSON.stringify(this.data);
+        }
+
+        load(data) {
+            if (!data || data == '') {
+                data = localStorage.getItem(this.saveKey);
+            }
             if (!data) {
                 this.data = {};
             } else {
                 this.data = JSON.parse(data);
             }
-            this.itemsAreaElement.innerHTML = '';
             if (!this.data.items) {
                 this.data.items = [''];
             }
-            this.data.items.forEach((text) => {
+            this.itemsAreaElement.innerHTML = '';
+            this.data.items.reverse().forEach((text) => {
                 this.addItemElement(text);
             });
         }
@@ -212,7 +233,7 @@
                 items.push(e.value);
             });
             this.data.items = items;
-            localStorage.setItem(this.saveKey, JSON.stringify(this.data));
+            localStorage.setItem(this.saveKey, this.stringify());
         }
 
         show() {
@@ -221,6 +242,7 @@
         }
 
         hide() {
+            this.load();
             this.element.classList.add('wrnt-hide');
         }
     }
