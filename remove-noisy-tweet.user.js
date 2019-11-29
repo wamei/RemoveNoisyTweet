@@ -187,7 +187,7 @@
 
             div.appendChild(textarea);
             div.appendChild(close);
-            this.itemsAreaElement.appendChild(div);
+            this.itemsAreaElement.insertBefore(div, this.itemsAreaElement.firstElementChild);
         }
 
         load() {
