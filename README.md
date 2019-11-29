@@ -8,7 +8,7 @@ On Chrome
 1. Open [https://tweetdeck.twitter.com/](https://tweetdeck.twitter.com/).
 1. Open Remove Noisy Tweet Settings.
 1. Add the keyword that you want to exclude from tweets.  
-  (You can use Regular Expression. ex) "/USD\\/?JPY/" matches "USDJPY" or "USD/JPY")
+  (You can use Regular Expression. ex) "/apple|orange/" matches "apple" or "orange")
 1. Click 'Save on close'.
 1. Automatically Remove tweets that contains the keywords.
 
