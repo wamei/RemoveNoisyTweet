@@ -250,7 +250,15 @@
 
     Util.onElementInserted('article.stream-item', (target) => {
         Settings.data.items.forEach((keyword) => {
-            if (keyword != '' && target.innerHTML.includes(keyword)) {
+            if (keyword != '') {
+                const match = keyword.match(new RegExp('^/(.+)/([gimsuy]*)$'));
+                if (match) {
+                    if (!new RegExp(match[1], match[2]).test(target.innerHTML)) {
+                        return;
+                    }
+                } else if (!target.innerHTML.includes(keyword)) {
+                    return;
+                }
                 target.style.display = 'none';
             }
         });
