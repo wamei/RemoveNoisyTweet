@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Remove Noisy Tweet
 // @namespace    http://wamei.jp/
-// @version      0.1
+// @version      0.2
 // @author       wamei
 // @match        https://tweetdeck.twitter.com/
 // @grant        none
@@ -46,6 +46,7 @@
     class _Settings {
         constructor () {
            this.saveKey = 'wrnt';
+           this.tweetSelector = 'article.stream-item';
            this.style = document.createElement('style');
            this.style.innerHTML = `
 .wrnt-settings button {
@@ -65,6 +66,9 @@
   text-align: right;
 }
 .wrnt-hide {
+  display: none;
+}
+.wrnt-hide-tweet {
   display: none;
 }
 .wrnt-textarea {
@@ -234,6 +238,13 @@
             });
             this.data.items = items;
             localStorage.setItem(this.saveKey, this.stringify());
+
+            document.querySelectorAll('.wrnt-hide-tweet').forEach((target) => {
+                target.classList.remove('wrnt-hide-tweet');
+            });
+            document.querySelectorAll(this.tweetSelector).forEach((target) => {
+                this.removeTweet(target);
+            });
         }
 
         show() {
@@ -245,12 +256,12 @@
             this.load();
             this.element.classList.add('wrnt-hide');
         }
-    }
-    const Settings = new _Settings();
 
-    Util.onElementInserted('article.stream-item', (target) => {
-        Settings.data.items.forEach((keyword) => {
-            if (keyword != '') {
+        removeTweet(target) {
+            this.data.items.forEach((keyword) => {
+                if (keyword == '') {
+                    return;
+                }
                 const match = keyword.match(new RegExp('^/(.+)/([gimsuy]*)$'));
                 if (match) {
                     if (!new RegExp(match[1], match[2]).test(target.innerHTML)) {
@@ -259,9 +270,14 @@
                 } else if (!target.innerHTML.includes(keyword)) {
                     return;
                 }
-                target.style.display = 'none';
-            }
-        });
+                target.classList.add('wrnt-hide-tweet');
+            });
+        }
+    }
+    const Settings = new _Settings();
+
+    Util.onElementInserted(Settings.tweetSelector, (target) => {
+        Settings.removeTweet(target);
     });
 
     Util.onElementInserted('.js-dropdown-content', (target) => {
