@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Remove Noisy Tweet
 // @namespace    http://wamei.jp/
-// @version      0.2
+// @version      0.3
 // @author       wamei
 // @match        https://tweetdeck.twitter.com/
 // @grant        none
@@ -264,10 +264,10 @@
                 }
                 const match = keyword.match(new RegExp('^/(.+)/([gimsuy]*)$'));
                 if (match) {
-                    if (!new RegExp(match[1], match[2]).test(target.innerHTML)) {
+                    if (!new RegExp(match[1], match[2]).test(target.innerText)) {
                         return;
                     }
-                } else if (!target.innerHTML.includes(keyword)) {
+                } else if (!target.innerText.includes(keyword)) {
                     return;
                 }
                 target.classList.add('wrnt-hide-tweet');
