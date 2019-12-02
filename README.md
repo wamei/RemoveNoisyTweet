@@ -13,3 +13,19 @@ On Chrome
 1. Automatically Remove tweets that contains the keywords.
 
 ![image](https://user-images.githubusercontent.com/2811188/69854829-69274b80-12cd-11ea-8f9d-fdf446576b6d.png)
+
+# Tips
+match 'apple'
+```
+apple
+```
+
+match 'apple' OR 'orange' OR 'grape'
+```
+/apple|orange|grape/
+```
+
+match 'apple' AND 'orange' AND 'grape'
+```
+/^(?=[\s\S]*apple)(?=[\s\S]*orange)(?=[\s\S]*grape)/
+```
