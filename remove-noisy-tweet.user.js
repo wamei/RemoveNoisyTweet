@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Remove Noisy Tweet
 // @namespace    http://wamei.jp/
-// @version      0.3
+// @version      0.4
 // @author       wamei
 // @match        https://tweetdeck.twitter.com/
 // @grant        none
@@ -69,7 +69,8 @@
   display: none;
 }
 .wrnt-hide-tweet {
-  display: none;
+  height: 0;
+  overflow: hidden;
 }
 .wrnt-textarea {
   overflow-y: scroll;
@@ -148,6 +149,24 @@
             this.itemsAreaElement = document.createElement('div');
             this.itemsAreaElement.classList.add('wrnt-textarea');
             this.element.appendChild(this.itemsAreaElement);
+
+            this.onButton = document.createElement('button');
+            this.offButton = document.createElement('button');
+
+            this.onButton.innerHTML = `ON`;
+            this.onButton.addEventListener('click', () => {
+                this.data.enabled = true;
+                this.onButton.style.display = 'none';
+                this.offButton.style.display = 'inline';
+            });
+            this.element.appendChild(this.onButton);
+            this.offButton.innerHTML = `OFF`;
+            this.offButton.addEventListener('click', () => {
+                this.data.enabled = false;
+                this.onButton.style.display = 'inline';
+                this.offButton.style.display = 'none';
+            });
+            this.element.appendChild(this.offButton);
 
             const addButton = document.createElement('button');
             addButton.innerHTML = `Add`;
@@ -229,6 +248,13 @@
             this.data.items.reverse().forEach((text) => {
                 this.addItemElement(text);
             });
+            if (this.data.enabled == false) {
+                this.onButton.style.display = 'inline';
+                this.offButton.style.display = 'none';
+            } else {
+                this.onButton.style.display = 'none';
+                this.offButton.style.display = 'inline';
+            }
         }
 
         save() {
@@ -258,6 +284,9 @@
         }
 
         removeTweet(target) {
+            if (this.data.enabled == false) {
+                return;
+            }
             this.data.items.forEach((keyword) => {
                 if (keyword == '') {
                     return;
